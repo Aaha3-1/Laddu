@@ -1,0 +1,123 @@
+# Laddu Package Manager
+import colorama
+from sys import argv
+from os import system
+from time import sleep
+from subprocess import run
+
+# Setup
+VERSION = f"{argv[0]} v1.4.6"
+VERSION_RAW = "v1.4.6"
+argc = len(argv)
+cyan = colorama.Fore.LIGHTCYAN_EX
+normal = colorama.Fore.RESET
+l = "{"
+r = "}"
+
+def get_repo_url(username, repo_name):
+    if username != '--aur':
+        url = f"https://github.com/{username}/{repo_name}"  # Remove .git from repo_name
+        return url
+    elif username == '--aur':
+        url = f"https://aur.archlinux.org/{repo_name}"  # Remove .git from repo_name
+        return url
+    else:
+        print(" -> Invalid repo url")
+        exit(1)
+
+
+def end():
+    try:
+        system(f"cd {argv[2].split('/', 1)[-1]} && makepkg -si --noconfirm")
+        print(f"\n -> Installation complete.")
+        system(f"sudo rm -rf ./{argv[2].split('/', 1)[-1]}")
+
+    except Exception:
+        print(" -> error with building package")
+
+def update():
+    print(f"{cyan}::{normal} Synchronizing Package Databases...\n")
+    sleep(3)
+    print(f"core is up to date")
+    sleep(3)
+    print(f"extra is up to date")
+    sleep(3)
+    print(f"\n{cyan}::{normal} Searching (1): laddu-{VERSION_RAW} For Upgrades...\n\n")
+    sleep(3)
+    req='pip install -r requirements.txt'
+    run(req,shell=True)
+    gitpak='sudo pacman -S git'
+    run(gitpak,shell=True)
+    
+
+try:
+    
+    if argv[1] == "--build" or argv[1] == "-B":
+                system(f"cd {argv[2]}")
+                system(f" makepkg -si") 
+    
+    if argv[1] == "-h" or argv[1] == "--help":
+        print(f"Usage: {argv[0]} <flags> <package>\n")
+        print("note[!]: use --aur/<repo>.git to install aur package.\nnote[!]: use <user>/<repo>.git to install git packages.\n")
+        print(f"{argv[0]}   {l}-B --build{r} -- Builds package")
+        print(f"{argv[0]}   {l}-h --help{r} -- Reveals {argv[0]} Command interface")
+        print(f"{argv[0]}   {l}-R --remove{r} -- Removes any given packages")
+        print(f"{argv[0]}   {l}-S --sync{r} -- Sychronizes the {argv[0]} database and installs the given package")
+        print(f"{argv[0]}   {l}-Ss --search{r} -- Searches and gives user with query")
+        print(f"{argv[0]}   {l}-Syu --update{r} -- Updates {argv[0]} database to the latest") 
+
+    if argv[1] == "-Syu" or argv[1] == "--update":
+        update()
+
+    if argv[1] == "-R" or argv[1] == "--remove":
+        print(f"{cyan}::{normal} Resolving Conflicts...")
+        sleep(3)
+        yn = input(f"\n\n{cyan}::{normal} Do you want to remove {argv[2]}? [Y/n] ")
+        if yn.lower() == "y":
+            system(f"sudo rm -rf {argv[2].split('/', 1)[0]}")
+            cmd=f'sudo pacman -R {argv[2].split('/', 1)[0]}'
+            run(cmd,shell=True)
+        elif yn.lower() == "n":
+            print(" -> error removing repo packages")
+            exit(1)
+
+    if argv[1] == "-S" or argv[1] == "--sync":
+        update()
+        print(f"\n{cyan}::{normal} Resolving Dependencies...")
+        sleep(3)
+        print(f"{cyan}::{normal} Looking For Conflicting Packages...")
+        sleep(3)
+        print(f"\n{cyan}::{normal} Sync Explicit (1): {argv[2].split('/', 1)[-1]}")
+        sleep(3)
+        yn = input(f"\n\n{cyan}::{normal} Proceed with installation of {argv[2].split('/', 1)[-1]}? [Y/n] ")
+        if yn.lower() == "y":
+            # system("makepkg -C")
+            repo = get_repo_url(username=argv[2].split('/', 1)[0],repo_name=argv[2].split('/', 1)[-1])
+            system(f"git clone {repo}.git")
+            print(" -> Gathered Repo Files")
+            sleep(3)
+            rev = input(f"\n{cyan}::{normal} Proceed with Review of PKGBUILD? [Y/n] ")
+            if rev == "y":
+                system(f"cd {argv[2].split('/', 1)[-1]} && cat PKGBUILD")
+                system("cd ..")
+                print("\n",end='')
+                end()
+            elif rev == "n":
+                end()
+        elif yn.lower() == "n":
+            print(" -> error installing repo packages")
+              
+    if argv[1] == "-Ss" or argv[1] == "--search":
+        print(f"{cyan}::{normal} Items Within Selected Repository:")
+        sleep(2)
+        system(f"git ls-files {get_repo_url(username=argv[2].split('/', 1)[0], repo_name=argv[2].split('/', 1)[-1])}")
+        
+    if argv[1] == "-V" or argv[1] == "--version":
+        print(VERSION)
+        
+except IndexError:
+    print(f"\nUsage: {argv[0]} <flags> <package>")
+    print(f" -> Hint: Use `{argv[0]} --help` for more info")
+    
+except Exception as e:
+    print(f" -> error: {e}")
