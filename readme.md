@@ -23,7 +23,7 @@ makepkg -si
   ```
   laddu -S <user>/<reponame>
   ```
-- To install from hardisk, use:
+- To install from `hardisk`, use:
   ```
   laddu -B <path>
   ```
