@@ -30,7 +30,7 @@ def get_repo_url(username, repo_name):
 def end():
     try:
         system(f"cd {argv[2].split('/', 1)[-1]} && makepkg -si --noconfirm")
-        print(f"\n -> Installation complete.")
+        print(f"\n -> complete building package")
         system(f"sudo rm -rf ./{argv[2].split('/', 1)[-1]}")
 
     except Exception:
@@ -49,13 +49,22 @@ def update():
     run(req,shell=True)
     gitpak='sudo pacman -S git'
     run(gitpak,shell=True)
+    jqcom='sudo pacman -S jq'
+    run(jqcom,shell=True)
     
 
 try:
     
     if argv[1] == "--build" or argv[1] == "-B":
-                system(f"cd {argv[2]}")
-                system(f" makepkg -si") 
+        system(f"cd {argv[2]}")
+        build = input(f"\n{cyan}::{normal} Proceed with Review of PKGBUILD? [Y/n] ")
+        if build == "y":
+            system(f"cd {argv[2].split('/', 1)[-1]} && cat PKGBUILD")
+            system("cd ..")
+            print("\n",end='')
+            system(f" makepkg -si")
+        elif build == "n":
+            system(f" makepkg -si")
     
     if argv[1] == "-h" or argv[1] == "--help":
         print(f"Usage: laddu <flags> <package>\n")
@@ -65,9 +74,9 @@ try:
         print(f"laddu   {l}-R --remove{r} -- Removes any given packages")
         print(f"laddu   {l}-S --sync{r} -- Sychronizes the laddu database and installs the given package")
         print(f"laddu   {l}-Ss --search{r} -- Searches and gives user with query")
-        print(f"laddu   {l}-Syu --update{r} -- Updates laddu database to the latest") 
+        print(f"laddu   {l}-Syu --update -Sua{r} -- Updates laddu database to the latest") 
 
-    if argv[1] == "-Syu" or argv[1] == "--update":
+    if argv[1] == "-Syu" or argv[1] == "--update" or argv[1] == "-Sua":
         update()
 
     if argv[1] == "-R" or argv[1] == "--remove":
@@ -111,14 +120,13 @@ try:
     if argv[1] == "-Ss" or argv[1] == "--search":
         print(f"{cyan}::{normal} Items Within Selected Repository:")
         sleep(2)
-        system(f"git ls-files {get_repo_url(username=argv[2].split('/', 1)[0], repo_name=argv[2].split('/', 1)[-1])}")
+        system(f'wget -qO- {get_repo_url(username=argv[2].split("/", 1)[0], repo_name=argv[2].split("/", 1)[-1])} | jq -r \'.[] | "\(.type): \(.name)"\'')
         
     if argv[1] == "-V" or argv[1] == "--version":
         print(VERSION)
         
 except IndexError:
-    print(f"\nUsage: laddu <flags> <package>")
-    print(f" -> Hint: Use `laddu --help` for more info")
+    update()
     
 except Exception as e:
     print(f" -> error: {e}")
