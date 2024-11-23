@@ -19,7 +19,8 @@ sha256sums=(SKIP)
 # }
 
 build() {
-    cd "$srcdir/$pkgname-$pkgver"
+    git clone "$url"
+    cd "./Laddu/$srcdir/$pkgname-$pkgver"
     python3 -m pip install --upgrade build
     python3 -m build --wheel --no-isolation
 }
