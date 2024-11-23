@@ -1,0 +1,6 @@
+setup.py
+laddu.egg-info/PKG-INFO
+laddu.egg-info/SOURCES.txt
+laddu.egg-info/dependency_links.txt
+laddu.egg-info/requires.txt
+laddu.egg-info/top_level.txt
