@@ -120,7 +120,7 @@ try:
     if argv[1] == "-Ss" or argv[1] == "--search":
         print(f"{cyan}::{normal} Items Within Selected Repository:")
         sleep(2)
-        system(f'wget -qO- {get_repo_url(username=argv[2].split("/", 1)[0], repo_name=argv[2].split("/", 1)[-1])} | jq -r \'.[] | "\(.type): \(.name)"\'')
+        system(rf'wget -qO- {get_repo_url(username=argv[2].split("/", 1)[0], repo_name=argv[2].split("/", 1)[-1])} | jq -r \'.[] | "\(.type): \(.name)"\'')
         
     if argv[1] == "-V" or argv[1] == "--version":
         print(VERSION)
