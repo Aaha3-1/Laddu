@@ -36,5 +36,4 @@ package() {
     
     # Copy the laddu script to a shared directory
     install -Dm755 laddu.py "$pkgdir/usr/share/$pkgname/laddu.py"
-    sudo cp "./src/$pkgname-$pkgver/laddu.egg-info/requires.txt" "$pkgdir/usr/share/$pkgname/"
 }
