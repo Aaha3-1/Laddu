@@ -44,7 +44,7 @@ def update():
     sleep(3)
     print(f"\n{cyan}::{normal} Searching (1): laddu-{VERSION_RAW} For Upgrades...\n\n")
     sleep(3)
-    req='pip install -r requirements.txt'
+    req='pip install -r requires.txt'
     run(req,shell=True)
     gitpak='sudo pacman -S git'
     run(gitpak,shell=True)
