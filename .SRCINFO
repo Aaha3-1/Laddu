@@ -1,0 +1,16 @@
+pkgbase = laddu
+	pkgdesc = Laddu is a small, simple AUR Helper Built in Python
+	pkgver = 1.4.6
+	pkgrel = 1
+	url = https://github.com/Aaha3-1/Laddu.git
+	arch = x86_64
+	license = GPL
+	makedepends = python-build
+	makedepends = python-wheel
+	depends = git
+	depends = jq
+	depends = python-colorama
+	source = laddu::https://github.com/Aaha3-1/Laddu.git
+	sha256sums = SKIP
+
+pkgname = laddu
