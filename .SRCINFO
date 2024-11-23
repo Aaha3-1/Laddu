@@ -8,7 +8,6 @@ pkgbase = laddu
 	makedepends = python-build
 	makedepends = python-wheel
 	depends = git
-	depends = jq
 	depends = python-colorama
 	source = laddu::https://github.com/Aaha3-1/Laddu.git
 	sha256sums = SKIP
