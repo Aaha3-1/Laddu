@@ -27,3 +27,6 @@ makepkg -si
   ```
   laddu -B <path>
   ```
+
+ > [!WARNING]  
+ > Don't install random packages without making sure it is safe
