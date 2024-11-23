@@ -29,4 +29,5 @@ makepkg -si
   ```
 
  > [!WARNING]  
- > Don't install random packages without making sure it is safe
+ > Don't install random packages without making sure it is safe.
+ > Always check the `PKGBUILD` file in case you download a virus. 
