@@ -9,7 +9,7 @@ from subprocess import run
 # Setup
 VERSION = f"laddu v1.4.6"
 VERSION_RAW = "v1.4.6"
-Depends = 'colorama'
+Depends = ['colorama','requests']
 argc = len(argv)
 cyan = colorama.Fore.LIGHTCYAN_EX
 normal = colorama.Fore.RESET
@@ -46,9 +46,11 @@ def update():
     sleep(3)
     print(f"\n{cyan}::{normal} Searching (1): laddu-{VERSION_RAW} For Upgrades...\n\n")
     sleep(3)
-    req= f'pip install {Depends}'
+    req= f'pip install {Depends[0]}'
     run(req,shell=True)
     gitpak='sudo pacman -S git'
+    run(gitpak,shell=True)
+    gitpak='pip install {Depends[1]}'
     run(gitpak,shell=True)
     
 
