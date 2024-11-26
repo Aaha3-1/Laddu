@@ -1,5 +1,6 @@
 # Laddu Package Manager
 import colorama
+import requests
 from sys import argv
 from os import system
 from time import sleep
@@ -49,8 +50,6 @@ def update():
     run(req,shell=True)
     gitpak='sudo pacman -S git'
     run(gitpak,shell=True)
-    jqcom='sudo pacman -S jq'
-    run(jqcom,shell=True)
     
 
 try:
@@ -68,13 +67,13 @@ try:
     
     if argv[1] == "-h" or argv[1] == "--help":
         print(f"Usage: laddu <flags> <package>\n")
-        print("note[!]: use --aur/<repo>.git to install aur package.\nnote[!]: use <user>/<repo>.git to install git packages.\n")
+        print("note[!]: use --aur/<repo> to install aur package.\nnote[!]: use <user>/<repo> to install git packages (for search, use --git).\n")
         print(f"laddu   {l}-B --build{r} -- Builds package")
         print(f"laddu   {l}-h --help{r} -- Reveals laddu Command interface")
         print(f"laddu   {l}-R --remove{r} -- Removes any given packages")
         print(f"laddu   {l}-S --sync{r} -- Sychronizes the laddu database and installs the given package")
         print(f"laddu   {l}-Ss --search{r} -- Searches and gives user with query")
-        print(f"laddu   {l}-Syu --update -Sua{r} -- Updates laddu database to the latest") 
+        print(f"laddu   {l}-Syu -Sua --update{r} -- Updates laddu database to the latest") 
 
     if argv[1] == "-Syu" or argv[1] == "--update" or argv[1] == "-Sua":
         update()
@@ -118,9 +117,24 @@ try:
             print(" -> error installing repo packages")
               
     if argv[1] == "-Ss" or argv[1] == "--search":
-        print(f"{cyan}::{normal} Items Within Selected Repository:")
-        sleep(2)
-        system(rf'wget -qO- {get_repo_url(username=argv[2].split("/", 1)[0], repo_name=argv[2].split("/", 1)[-1])}')
+        search_term = argv[3]
+        if argv[2] == "--aur":
+            url = f"https://aur.archlinux.org/rpc/?v=5&type=search&arg={search_term}"
+        elif argv[2] == "--git":
+            url = f"https://api.github.com/search/repositories?q={search_term}"
+        response = requests.get(url)
+        
+        if response.status_code == 200:
+            data = response.json()
+            
+            if data['type'] == 'error':
+                print("Error:", data['error'])
+            else:
+                for result in data['results']:
+                    print(f"Package Name: {result['Name']}\nDescription: {result['Description']}\n")
+        else:
+            print(f"Failed to fetch data. HTTP Status Code: {response.status_code}")
+
         
     if argv[1] == "-V" or argv[1] == "--version":
         print(VERSION)
