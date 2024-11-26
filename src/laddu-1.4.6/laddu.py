@@ -16,6 +16,32 @@ normal = colorama.Fore.RESET
 l = "{"
 r = "}"
 
+def Sync():
+    print(f"\n{cyan}::{normal} Resolving Dependencies...")
+        sleep(3)
+        print(f"{cyan}::{normal} Looking For Conflicting Packages...")
+        sleep(3)
+        print(f"\n{cyan}::{normal} Sync Explicit (1): {argv[2].split('/', 1)[-1]}")
+        sleep(3)
+        yn = input(f"\n\n{cyan}::{normal} Proceed with installation of {argv[2].split('/', 1)[-1]}? [Y/n] ")
+        if yn.lower() == "y":
+            # system("makepkg -C")
+            repo = get_repo_url(username=argv[2].split('/', 1)[0],repo_name=argv[2].split('/', 1)[-1])
+            system(f"git clone {repo}.git")
+            print(" -> Gathered Repo Files")
+            sleep(3)
+            rev = input(f"\n{cyan}::{normal} Proceed with Review of PKGBUILD? [Y/n] ")
+            if rev == "y":
+                system(f"cd {argv[2].split('/', 1)[-1]} && cat PKGBUILD")
+                system("cd ..")
+                print("\n",end='')
+                end()
+            elif rev == "n":
+                end()
+        elif yn.lower() == "n":
+            print(" -> error installing repo packages")
+
+
 def get_repo_url(username, repo_name):
     if username != '--aur':
         url = f"https://github.com/{username}/{repo_name}"  # Remove .git from repo_name
@@ -79,7 +105,11 @@ try:
         print(f"laddu   {l}-Syu -Sua --update{r} -- Updates laddu database to the latest") 
 
     if argv[1] == "-Syu" or argv[1] == "--update" or argv[1] == "-Sua":
-        update()
+        if argv[2] == None:
+            update()
+        else:
+            update()
+            Sync()
 
     if argv[1] == "-R" or argv[1] == "--remove":
         print(f"{cyan}::{normal} Resolving Conflicts...")
@@ -93,30 +123,7 @@ try:
             exit(1)
 
     if argv[1] == "-S" or argv[1] == "--sync":
-        update()
-        print(f"\n{cyan}::{normal} Resolving Dependencies...")
-        sleep(3)
-        print(f"{cyan}::{normal} Looking For Conflicting Packages...")
-        sleep(3)
-        print(f"\n{cyan}::{normal} Sync Explicit (1): {argv[2].split('/', 1)[-1]}")
-        sleep(3)
-        yn = input(f"\n\n{cyan}::{normal} Proceed with installation of {argv[2].split('/', 1)[-1]}? [Y/n] ")
-        if yn.lower() == "y":
-            # system("makepkg -C")
-            repo = get_repo_url(username=argv[2].split('/', 1)[0],repo_name=argv[2].split('/', 1)[-1])
-            system(f"git clone {repo}.git")
-            print(" -> Gathered Repo Files")
-            sleep(3)
-            rev = input(f"\n{cyan}::{normal} Proceed with Review of PKGBUILD? [Y/n] ")
-            if rev == "y":
-                system(f"cd {argv[2].split('/', 1)[-1]} && cat PKGBUILD")
-                system("cd ..")
-                print("\n",end='')
-                end()
-            elif rev == "n":
-                end()
-        elif yn.lower() == "n":
-            print(" -> error installing repo packages")
+        Sync()
               
     if argv[1] == "-Ss" or argv[1] == "--search":
         search_term = sys.argv[3]
