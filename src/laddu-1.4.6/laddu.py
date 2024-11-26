@@ -46,12 +46,13 @@ def update():
     sleep(3)
     print(f"\n{cyan}::{normal} Searching (1): laddu-{VERSION_RAW} For Upgrades...\n\n")
     sleep(3)
-    colo= f'pip install {Depends[0]}'
     run(colo,shell=True)
     gitpak='sudo pacman -S git'
     run(gitpak,shell=True)
-    req='pip install {Depends[1]}'
-    run(req,shell=True)
+    
+    for i in range(len(Depends)):
+        req='pip install {Depends[i]}'
+        run(req,shell=True)
     
 
 try:
