@@ -86,8 +86,7 @@ try:
         sleep(3)
         yn = input(f"\n\n{cyan}::{normal} Do you want to remove {argv[2]}? [Y/n] ")
         if yn.lower() == "y":
-            system(f"sudo rm -rf {argv[2].split('/', 1)[0]}")
-            cmd=f'sudo pacman -R {argv[2].split('/', 1)[0]}'
+            cmd = f'sudo pacman -R {argv[2].split("/", 1)[0]}'
             run(cmd,shell=True)
         elif yn.lower() == "n":
             print(" -> error removing repo packages")
