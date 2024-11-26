@@ -120,23 +120,40 @@ try:
             print(" -> error installing repo packages")
               
     if argv[1] == "-Ss" or argv[1] == "--search":
-        search_term = argv[3]
-        if argv[2] == "--aur":
-            url = f"https://aur.archlinux.org/rpc/?v=5&type=search&arg={search_term}"
-        elif argv[2] == "--git":
-            url = f"https://github.com/search?q={search_term}&type=repositories"
-        response = requests.get(url)
+        search_term = sys.argv[3]
         
-        if response.status_code == 200:
-            data = response.json()
-            
-            if data['type'] == 'error':
-                print("Error:", data['error'])
+        if sys.argv[2] == "--aur":
+            url = f"https://aur.archlinux.org/rpc/?v=5&type=search&arg={search_term}"
+            response = requests.get(url)
+        
+            if response.status_code == 200:
+                data = response.json()
+                
+                if data['resultcount'] == 0:
+                    print("No results found.")
+                else:
+                    for result in data['results']:
+                        print(f"Package Name: {result['Name']}\nDescription: {result['Description']}\n")
             else:
-                for result in data['results']:
-                    print(f"Package Name: {result['Name']}\nDescription: {result['Description']}\n")
+                print(f" -> error: failed to fetch data from AUR. HTTP Status Code: {response.status_code}")
+        
+        elif sys.argv[2] == "--git":
+            url = f"https://api.github.com/search/repositories?q={search_term}"
+            response = requests.get(url)
+        
+            if response.status_code == 200:
+                data = response.json()
+        
+                if 'items' not in data:
+                    print("No results found.")
+                else:
+                    for repo in data['items']:
+                        print(f"Repository Name: {repo['name']}\nDescription: {repo['description']}\nURL: {repo['html_url']}\n")
+            else:
+                print(f" -> error: failed to fetch data from GitHub. HTTP Status Code: {response.status_code}")
+        
         else:
-            print(f"Failed to fetch data. HTTP Status Code: {response.status_code}")
+            print(" -> error: invalid option. Use --aur or --git.")
 
         
     if argv[1] == "-V" or argv[1] == "--version":
