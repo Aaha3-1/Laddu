@@ -125,7 +125,7 @@ try:
         Sync()
               
     if argv[1] == "-Ss" or argv[1] == "--search":
-        search_term = sys.argv[3]
+        search_term = argv[3]
         
         if sys.argv[2] == "--aur":
             url = f"https://aur.archlinux.org/rpc/?v=5&type=search&arg={search_term}"
