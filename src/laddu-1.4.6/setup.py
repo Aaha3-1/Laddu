@@ -9,7 +9,8 @@ setup(
     url='https://github.com/Aaha3-1/Laddu.git',
     packages=find_packages(),
     install_requires=[
-        'colorama'
+        'colorama',
+        'requests'
     ],
     classifiers=[
         'Programming Language :: Python :: 3',
