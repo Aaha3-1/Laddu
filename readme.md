@@ -7,7 +7,7 @@
 to install Laddu, you can use the following script below:
 ```
 sudo pacman -S --needed git base-devel
-git clone https://github.com/Aaha3-1/Laddu
+git clone --depth 1 https://github.com/Aaha3-1/Laddu
 makepkg -si
 ```
 
