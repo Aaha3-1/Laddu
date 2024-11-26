@@ -123,7 +123,7 @@ try:
         if argv[2] == "--aur":
             url = f"https://aur.archlinux.org/rpc/?v=5&type=search&arg={search_term}"
         elif argv[2] == "--git":
-            url = f"https://api.github.com/search/repositories?q={search_term}"
+            url = f"https://github.com/search?q={search_term}&type=repositories"
         response = requests.get(url)
         
         if response.status_code == 200:
