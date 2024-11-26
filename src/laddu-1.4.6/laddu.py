@@ -76,7 +76,7 @@ def update():
     run(gitpak,shell=True)
     
     for i in range(len(Depends)):
-        req='pip install {Depends[i]}'
+        req=f'pip install {Depends[i]}'
         run(req,shell=True)
     
 
