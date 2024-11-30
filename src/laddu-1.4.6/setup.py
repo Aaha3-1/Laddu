@@ -10,7 +10,8 @@ setup(
     packages=find_packages(),
     install_requires=[
         'colorama',
-        'requests'
+        'requests',
+        'argparse'
     ],
     classifiers=[
         'Programming Language :: Python :: 3',
