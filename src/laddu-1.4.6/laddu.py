@@ -7,8 +7,10 @@ from time import sleep
 from subprocess import run
 
 # Setup
+i = 0
 VERSION = f"laddu v1.4.6"
 VERSION_RAW = "v1.4.6"
+pkg_name_desc = {}
 Depends = ['colorama','requests']
 argc = len(argv)
 cyan = colorama.Fore.LIGHTCYAN_EX
@@ -16,12 +18,53 @@ normal = colorama.Fore.RESET
 l = "{"
 r = "}"
 
+def Search(search_term):
+    if argv[2] == "--aur":
+        url = f"https://aur.archlinux.org/rpc/?v=5&type=search&arg={search_term}"
+        response = requests.get(url)
+    
+        if response.status_code == 200:
+            data = response.json()
+            
+            if data['resultcount'] == 0:
+                print("No results found.")
+            else:
+                for result in data['results']:
+                    pkg_name_desc[result[Name]] = result[Description]
+                    print(f"Package Name: {result['Name']}\nDescription: {result['Description']}\n")
+        else:
+            print(f" -> error: failed to fetch data from AUR. HTTP Status Code: {response.status_code}")
+    
+    elif argv[2] == "--git":
+        url = f"https://api.github.com/search/repositories?q={search_term}"
+        response = requests.get(url)
+    
+        if response.status_code == 200:
+            data = response.json()
+    
+            if 'items' not in data:
+                print("No results found.")
+            else:
+                for repo in data['items']:
+                    i += 1
+                    print(f"{i}. Repository Name: {repo['name']}\nDescription: {repo['description']}\nURL: {repo['html_url']}\n")
+        else:
+            print(f" -> error: failed to fetch data from GitHub. HTTP Status Code: {response.status_code}")
+    
+    else:
+        print(" -> error: invalid option. Use --aur or --git.")
+
+
+
 def Sync():
+    Search(argv[2].split('/', 1)[-1])
+    option = input('Enter Package Number (eg. 0,1,2,3,4)\n==> ')
+    sleep(3)
     print(f"\n{cyan}::{normal} Resolving Dependencies...")
     sleep(3)
     print(f"{cyan}::{normal} Looking For Conflicting Packages...")
     sleep(3)
-    print(f"\n{cyan}::{normal} Sync Explicit (1): {argv[2].split('/', 1)[-1]}")
+    print(f"\n{cyan}::{normal} Sync Explicit (1): {pkg_name_desc[option]}")
     sleep(3)
     yn = input(f"\n\n{cyan}::{normal} Proceed with installation of {argv[2].split('/', 1)[-1]}? [Y/n] ")
     if yn.lower() == "y":
@@ -125,41 +168,7 @@ try:
         Sync()
               
     if argv[1] == "-Ss" or argv[1] == "--search":
-        search_term = argv[3]
-        
-        if argv[2] == "--aur":
-            url = f"https://aur.archlinux.org/rpc/?v=5&type=search&arg={search_term}"
-            response = requests.get(url)
-        
-            if response.status_code == 200:
-                data = response.json()
-                
-                if data['resultcount'] == 0:
-                    print("No results found.")
-                else:
-                    for result in data['results']:
-                        print(f"Package Name: {result['Name']}\nDescription: {result['Description']}\n")
-            else:
-                print(f" -> error: failed to fetch data from AUR. HTTP Status Code: {response.status_code}")
-        
-        elif argv[2] == "--git":
-            url = f"https://api.github.com/search/repositories?q={search_term}"
-            response = requests.get(url)
-        
-            if response.status_code == 200:
-                data = response.json()
-        
-                if 'items' not in data:
-                    print("No results found.")
-                else:
-                    for repo in data['items']:
-                        print(f"Repository Name: {repo['name']}\nDescription: {repo['description']}\nURL: {repo['html_url']}\n")
-            else:
-                print(f" -> error: failed to fetch data from GitHub. HTTP Status Code: {response.status_code}")
-        
-        else:
-            print(" -> error: invalid option. Use --aur or --git.")
-
+        Search(argv[3])
         
     if argv[1] == "-V" or argv[1] == "--version":
         print(VERSION)
