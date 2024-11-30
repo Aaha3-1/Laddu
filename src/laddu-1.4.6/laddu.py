@@ -9,7 +9,7 @@ from subprocess import run
 VERSION = "laddu v1.4.6"
 VERSION_RAW = "v1.4.6"
 pkg_name_desc = {}
-Depends = ['colorama', 'requests']
+Depends = ['colorama', 'requests','argparse']
 cyan = colorama.Fore.LIGHTCYAN_EX
 normal = colorama.Fore.RESET
 l = "{"
