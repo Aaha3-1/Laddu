@@ -17,9 +17,9 @@ normal = colorama.Fore.RESET
 l = "{"
 r = "}"
 
-def Search(search_term):
-    if argv[2] == "--aur":
-        url = f"https://aur.archlinux.org/rpc/?v=5&type=search&arg={search_term}"
+def Search(search_term,SyncDev):
+    if "--aur/" in argv[3-SyncDev]:
+        url = f"https://aur.archlinux.org/rpc/?v=5&type=search&arg={argv[3-SyncDev] - '--aur/'}"
         response = requests.get(url)
     
         if response.status_code == 200:
@@ -34,8 +34,8 @@ def Search(search_term):
         else:
             print(f" -> error: failed to fetch data from AUR. HTTP Status Code: {response.status_code}")
     
-    elif argv[2] == "--git":
-        url = f"https://api.github.com/search/repositories?q={search_term}"
+    elif "--git/" in argv[3-SyncDev]:
+        url = f"https://api.github.com/search/repositories?q={argv[3-SyncDev] - '--git/'}"
         response = requests.get(url)
     
         if response.status_code == 200:
@@ -57,7 +57,7 @@ def Search(search_term):
 
 
 def Sync():
-    Search(argv[2].split('/', 1)[-1])
+    Search(argv[2].split('/', 1)[-1],0)
     option = input('Enter Package Number (eg. 0,1,2,3,4)\n==> ')
     sleep(3)
     print(f"\n{cyan}::{normal} Resolving Dependencies...")
@@ -168,7 +168,7 @@ try:
         Sync()
               
     if argv[1] == "-Ss" or argv[1] == "--search":
-        Search(argv[3])
+        Search(argv[3],1)
         
     if argv[1] == "-V" or argv[1] == "--version":
         print(VERSION)
