@@ -7,7 +7,7 @@ pkgdesc="Laddu is a small, simple AUR Helper Built in Python"
 arch=('x86_64')
 url="https://github.com/Aaha3-1/Laddu.git"
 license=('GPL')
-depends=('git' 'python-colorama' 'python-requests')
+depends=('git' 'python-colorama' 'python-requests','python-argparse')
 makedepends=('python-build' 'python-wheel')
 source=('laddu::https://github.com/Aaha3-1/Laddu.git')
 sha256sums=(SKIP)
@@ -22,6 +22,7 @@ build() {
     cd "$srcdir/$pkgname-$pkgver"
     python3 -m pip install --upgrade build
     python3 -m build --wheel --no-isolation
+    makepkg --printsrcinfo > .SRCINFO
 }
 
 package() {
