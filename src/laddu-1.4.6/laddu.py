@@ -7,7 +7,6 @@ from time import sleep
 from subprocess import run
 
 # Setup
-i = 0
 VERSION = f"laddu v1.4.6"
 VERSION_RAW = "v1.4.6"
 pkg_name_desc = {}
@@ -30,7 +29,7 @@ def Search(search_term):
                 print("No results found.")
             else:
                 for result in data['results']:
-                    pkg_name_desc[result[Name]] = result[Description]
+                    pkg_name_desc[result['Name']] = result['Description']
                     print(f"Package Name: {result['Name']}\nDescription: {result['Description']}\n")
         else:
             print(f" -> error: failed to fetch data from AUR. HTTP Status Code: {response.status_code}")
@@ -45,6 +44,7 @@ def Search(search_term):
             if 'items' not in data:
                 print("No results found.")
             else:
+                i = 0
                 for repo in data['items']:
                     i += 1
                     print(f"{i}. Repository Name: {repo['name']}\nDescription: {repo['description']}\nURL: {repo['html_url']}\n")
