@@ -22,7 +22,6 @@ build() {
     cd "$srcdir/$pkgname-$pkgver"
     python3 -m pip install --upgrade build
     python3 -m build --wheel --no-isolation
-    makepkg --printsrcinfo > .SRCINFO
 }
 
 package() {
