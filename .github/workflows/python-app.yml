@@ -23,7 +23,8 @@ jobs:
     - uses: actions/checkout@v4
     - name: Set up Enviroment
       run: |
-        pacman -S python3 python-pip
+        pacman -Sy
+        pacman -Syu python3 python-pip
     - name: Set up Python 3.10
       uses: actions/setup-python@v3
       with:
