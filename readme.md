@@ -1,5 +1,7 @@
 # Laddu // An AUR Helper
-[![Workflow Status](https://img.shields.io/github/actions/workflow/status/Aaha3-1/Laddu/python-app.yml?style=for-the-badge&logo=arch-linux&color=c69ff5&logoColor=D9E0EE&labelColor=302D41)](https://github.com/Aaha3-1/Laddu/actions) [![repo size](https://img.shields.io/github/repo-size/Aaha3-1/Laddu?color=%23DDB6F2&label=SIZE&logo=arch-linux&style=for-the-badge&logoColor=D9E0EE&labelColor=302D41)](https://github.com/Aaha3-1/Laddu) [![last commit](https://img.shields.io/github/last-commit/Aaha3-1/Laddu?style=for-the-badge&logo=arch-linux&color=8bd5ca&logoColor=D9E0EE&labelColor=302D41)](https://github.com/Aaha3-1/Laddu/commit) [![license](https://img.shields.io/github/license/Aaha3-1/Laddu?style=for-the-badge&logo=arch-linux&color=ee999f&logoColor=D9E0EE&labelColor=302D41)](https://github.com/Laddu/LICENSE)
+[![Workflow Status](https://img.shields.io/github/actions/workflow/status/Aaha3-1/Laddu/python-app.yml?style=for-the-badge&logo=arch-linux&color=8bd5ca&logoColor=D9E0EE&labelColor=302D41)](https://github.com/Aaha3-1/Laddu/actions) [![repo size](https://img.shields.io/github/repo-size/Aaha3-1/Laddu?color=%23DDB6F2&label=SIZE&logo=arch-linux&style=for-the-badge&logoColor=D9E0EE&labelColor=302D41)](https://github.com/Aaha3-1/Laddu) [![last commit](https://img.shields.io/github/last-commit/Aaha3-1/Laddu?style=for-the-badge&logo=arch-linux&color=B4B4EF&logoColor=D9E0EE&labelColor=302D41)](https://github.com/Aaha3-1/Laddu/commit) [![license](https://img.shields.io/github/license/Aaha3-1/Laddu?style=for-the-badge&logo=arch-linux&color=ee999f&logoColor=D9E0EE&labelColor=302D41)](https://github.com/Laddu/LICENSE)
+
+
 
 `Laddu` Is a Small and Simple AUR Helper Which Was Programmed with Python
 
