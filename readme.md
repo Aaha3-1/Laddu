@@ -1,5 +1,5 @@
 # Laddu // An AUR Helper
-[![laddu](https://github.com/Aaha3-1/Laddu/actions/workflows/python-app.yml/badge.svg)](https://github.com/Aaha3-1/Laddu/actions/workflows/python-app.yml) [![Python 2.6|2.7|3.x](https://img.shields.io/badge/python-2.6|2.7|3.x-yellow.svg)](https://www.python.org/) [![License](https://img.shields.io/badge/license-GPLv3-red.svg)](https://raw.githubusercontent.com/Aaha3-1/Laddu/master/LICENSE)
+[![repo size](https://img.shields.io/github/repo-size/Aaha3-1/Laddu?color=%23DDB6F2&label=SIZE&logo=arch-linux&style=for-the-badge&logoColor=D9E0EE&labelColor=302D41)](https://github.com/Aaha3-1/Laddu) [![last commit](https://img.shields.io/github/last-commit/Aaha3-1/Laddu?style=for-the-badge&logo=arch-linux&color=8bd5ca&logoColor=D9E0EE&labelColor=302D41)](https://github.com/Aaha3-1/Laddu/commit) [![license](https://img.shields.io/github/license/Aaha3-1/Laddu?style=for-the-badge&logo=arch-linux&color=ee999f&logoColor=D9E0EE&labelColor=302D41)](https://github.com/Laddu/LICENSE)
 
 `Laddu` Is a Small and Simple AUR Helper Which Was Programmed with Python
 
