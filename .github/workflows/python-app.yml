@@ -43,7 +43,7 @@ jobs:
     - name: Build Package (Test)
       uses: heyhusen/archlinux-package-action@v2.2.1
       with:
-          path: package
+          path: ../../
           flags: '-si --noconfirm'
           namcap: true
           srcinfo: true
