@@ -20,8 +20,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Set up Enviroment
-      run: |
-        sudo apt install python3 python-pip python-wheel python-build
+      run: 
+        sudo apt update
+        sudo apt install python3 python-pip
     - name: Set up Python 3.10
       uses: actions/setup-python@v3
       with:
