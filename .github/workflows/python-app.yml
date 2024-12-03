@@ -16,15 +16,12 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    container:
-      image: archlinux
 
     steps:
     - uses: actions/checkout@v4
     - name: Set up Enviroment
       run: |
-        pacman -Sy
-        pacman -Syu python3 python-pip
+        yes | pacman -Syu python3 python-pip
     - name: Set up Python 3.10
       uses: actions/setup-python@v3
       with:
@@ -44,5 +41,9 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Build Package (Test)
-      run: |
-        makepkg
+      uses: heyhusen/archlinux-package-action@v2.2.1
+      with:
+          path: package
+          flags: '-si --noconfirm'
+          namcap: true
+          srcinfo: true
