@@ -9,27 +9,22 @@ from subprocess import run
 VERSION = "laddu v1.4.6"
 VERSION_RAW = "v1.4.6"
 pkg_name_desc = {}
-Depends = ['colorama', 'requests','argparse']
+Depends = ['colorama', 'requests', 'argparse']
 cyan = colorama.Fore.LIGHTCYAN_EX
 normal = colorama.Fore.RESET
-l = "{"
-r = "}"
 
 def parse_args():
     import argparse
     parser = argparse.ArgumentParser(description='Laddu Package Manager')
     parser.add_argument('command', choices=['-S', '--sync', '-Ss', '--search', '-Syu', '--update', '-Sua', '--build', '-B', '-R', '--remove', '-h', '--help', '-V', '--version'], help='Command to execute')
     parser.add_argument('package', nargs='?', help='Package to operate on')
-    parser.add_argument('--aur', nargs='?', const='', help='AUR search option')
-    parser.add_argument('--git', nargs='?', const='', help='GitHub search option')
-    parser.add_argument('-S', action='store_true', help='Flag for additional functionality')
-    parser.add_argument('-Ss', action='store_true', help='Flag for additional search')
+    parser.add_argument('--aur', action='store_true', help='AUR search option')
+    parser.add_argument('--git', action='store_true', help='GitHub search option')
     return parser.parse_args()
 
-def search(search_term, sync_dev):
-    search_term = search_term.split('/', 1)[-1]
-    if "--aur" in argv[2 - sync_dev]:
-        url = f"https://aur.archlinux.org/rpc/?v=5&type=search&arg={search_term}"
+def search(package, aur, git):
+    if aur:
+        url = f"https://aur.archlinux.org/rpc/?v=5&type=search&arg={package}"
         response = requests.get(url)
         if response.status_code == 200:
             data = response.json()
@@ -41,8 +36,8 @@ def search(search_term, sync_dev):
                     print(f"Package Name: {result['Name']}\nDescription: {result['Description']}\n")
         else:
             print(f" -> error: failed to fetch data from AUR. HTTP Status Code: {response.status_code}")
-    elif "--git" in argv[2 - sync_dev]:
-        url = f"https://api.github.com/search/repositories?q={search_term}"
+    elif git:
+        url = f"https://api.github.com/search/repositories?q={package}"
         response = requests.get(url)
         if response.status_code == 200:
             data = response.json()
@@ -50,14 +45,14 @@ def search(search_term, sync_dev):
                 print("No results found.")
             else:
                 for i, repo in enumerate(data['items']):
-                    print(f"{i+1}. Repository Name: {repo['name']}\nDescription: {repo['description']}\nURL: {repo['html_url']}\n")
+                    print(f"{i + 1}. Repository Name: {repo['name']}\nDescription: {repo['description']}\nURL: {repo['html_url']}\n")
         else:
             print(f" -> error: failed to fetch data from GitHub. HTTP Status Code: {response.status_code}")
     else:
         print(" -> error: invalid option. Use --aur or --git.")
 
 def sync():
-    search(argv[2], 0)
+    search(argv[2], '--aur' in argv, '--git' in argv)
     option = input('Enter Package Number (eg. 0,1,2,3,4)\n==> ')
     sleep(3)
     print(f"\n{cyan}::{normal} Resolving Dependencies...")
@@ -66,7 +61,7 @@ def sync():
     sleep(3)
     print(f"\n{cyan}::{normal} Sync Explicit (1): {pkg_name_desc[option]}")
     sleep(3)
-    yn = input(f"\n\n{cyan}::{normal} Proceed with installation of {argv[2].split('/', 1)[-1]}? [Y/n] ")
+    yn = input(f"\n\n{cyan}::{normal} Proceed with installation of {argv[2]}? [Y/n] ")
     if yn.lower() == "y":
         repo = get_repo_url(username=argv[2].split('/', 1)[0], repo_name=argv[2].split('/', 1)[-1])
         system(f"git clone {repo}.git")
@@ -133,12 +128,12 @@ def main():
     if args.command in ["-h", "--help"]:
         print(f"Usage: laddu <flags> <package>\n")
         print("note[!]: use --aur/<repo> to install aur package.\nnote[!]: use <user>/<repo> to install git packages (for search, use --git).\n")
-        print(f"laddu   {l}-B --build{r} -- Builds package")
-        print(f"laddu   {l}-h --help{r} -- Reveals laddu Command interface")
-        print(f"laddu   {l}-R --remove{r} -- Removes any given packages")
-        print(f"laddu   {l}-S --sync{r} -- Sychronizes the laddu database and installs the given package")
-        print(f"laddu   {l}-Ss --search{r} -- Searches and gives user with query")
-        print(f"laddu   {l}-Syu -Sua --update{r} -- Updates laddu database to the latest") 
+        print(f"laddu   -B --build -- Builds package")
+        print(f"laddu   -h --help -- Reveals laddu Command interface")
+        print(f"laddu   -R --remove -- Removes any given packages")
+        print(f"laddu   -S --sync -- Sychronizes the laddu database and installs the given package")
+        print(f"laddu   -Ss --search -- Searches and gives user with query")
+        print(f"laddu   -Syu -Sua --update -- Updates laddu database to the latest") 
 
     if args.command in ["-Syu", "--update", "-Sua"]:
         if args.package is None:
@@ -162,7 +157,7 @@ def main():
         sync()
               
     if args.command in ["-Ss", "--search"]:
-        search(args.package, 1)
+        search(args.package, args.aur, args.git)
         
     if args.command in ["-V", "--version"]:
         print(VERSION)
