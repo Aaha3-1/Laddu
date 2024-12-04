@@ -51,8 +51,8 @@ def search(package, aur, git):
     else:
         print(" -> error: invalid option. Use --aur or --git.")
 
-def sync():
-    search(argv[2], '--aur' in argv, '--git' in argv)
+def sync(package):
+    search(package, '--aur' in argv, '--git' in argv)
     option = input('Enter Package Number (eg. 0,1,2,3,4)\n==> ')
     sleep(3)
     print(f"\n{cyan}::{normal} Resolving Dependencies...")
@@ -61,15 +61,15 @@ def sync():
     sleep(3)
     print(f"\n{cyan}::{normal} Sync Explicit (1): {pkg_name_desc[option]}")
     sleep(3)
-    yn = input(f"\n\n{cyan}::{normal} Proceed with installation of {argv[2]}? [Y/n] ")
+    yn = input(f"\n\n{cyan}::{normal} Proceed with installation of {package}? [Y/n] ")
     if yn.lower() == "y":
-        repo = get_repo_url(username=argv[2].split('/', 1)[0], repo_name=argv[2].split('/', 1)[-1])
+        repo = get_repo_url(username=package.split('/', 1)[0], repo_name=package.split('/', 1)[-1])
         system(f"git clone {repo}.git")
         print(" -> Gathered Repo Files")
         sleep(3)
         rev = input(f"\n{cyan}::{normal} Proceed with Review of PKGBUILD? [Y/n] ")
         if rev.lower() == "y":
-            system(f"cd {argv[2].split('/', 1)[-1]} && cat PKGBUILD")
+            system(f"cd {package.split('/', 1)[-1]} && cat PKGBUILD")
             system("cd ..")
             print("\n", end='')
             end()
@@ -140,7 +140,7 @@ def main():
             update()
         else:
             update()
-            sync()
+            sync(args.package)
 
     if args.command in ["-R", "--remove"]:
         print(f"{cyan}::{normal} Resolving Conflicts...")
@@ -154,7 +154,7 @@ def main():
             exit(1)
 
     if args.command in ["-S", "--sync"]:
-        sync()
+        sync(args.package)
               
     if args.command in ["-Ss", "--search"]:
         search(args.package, args.aur, args.git)
