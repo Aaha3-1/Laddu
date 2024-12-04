@@ -17,9 +17,9 @@ def parse_args():
     import argparse
     parser = argparse.ArgumentParser(description='Laddu Package Manager')
     parser.add_argument('command', choices=['-S', '--sync', '-Ss', '--search', '-Syu', '--update', '-Sua', '--build', '-B', '-R', '--remove', '-h', '--help', '-V', '--version'], help='Command to execute')
+    parser.add_argument('--aur', nargs='?', const=True, help='AUR search option')
+    parser.add_argument('--git', nargs='?', const=True, help='GitHub search option')
     parser.add_argument('package', nargs='?', help='Package to operate on')
-    parser.add_argument('--aur', action='store_true', help='AUR search option')
-    parser.add_argument('--git', action='store_true', help='GitHub search option')
     return parser.parse_args()
 
 def search(package, aur, git):
