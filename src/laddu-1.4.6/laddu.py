@@ -17,8 +17,8 @@ normal = colorama.Fore.RESET
 l = "{"
 r = "}"
 
-def search(search_term):
-    if "--aur" in argv:
+def search(search_term, aur=False, git=False):
+    if aur:
         package = search_term.split('/', 1)[-1]
         url = f"https://aur.archlinux.org/rpc/?v=5&type=search&arg={package}"
         response = requests.get(url)
@@ -36,7 +36,7 @@ def search(search_term):
         else:
             print(f" -> error: failed to fetch data from AUR. HTTP Status Code: {response.status_code}")
     
-    elif "--git" in argv:
+    elif git:
         package = search_term.split('/', 1)[-1]
         url = f"https://api.github.com/search/repositories?q={package}"
         response = requests.get(url)
@@ -50,7 +50,7 @@ def search(search_term):
                 for i, repo in enumerate(data['items'], start=1):
                     pkg_name_desc[i] = repo['name']
                     pkg_name_version[i] = repo['default_branch']
-                    print(f"{i}. Repository Name: {repo['name']}\nDescription: {repo['description']}\nURL: {repo['html_url']}\nDefault Branch: {repo['default_branch']}\n")
+                    print(f"{i + 1}. Repository Name: {repo['name']}\nDescription: {repo['description']}\nURL: {repo['html_url']}\nDefault Branch: {repo['default_branch']}\n")
         else:
             print(f" -> error: failed to fetch data from GitHub. HTTP Status Code: {response.status_code}")
     
@@ -58,7 +58,13 @@ def search(search_term):
         print(" -> error: invalid option. Use --aur or --git.")
 
 def sync(package):
-    search(package)
+    if "--aur" in package:
+        search(package.split('--aur/')[1], aur=True)
+    elif "--git" in package:
+        search(package.split('--git/')[1], git=True)
+    else:
+        search(package)
+
     option = int(input('Enter Package Number (e.g. 1,2,3,4):\n==> '))
     selected_pkg = pkg_name_desc[option]
     selected_version = pkg_name_version[option]
@@ -71,13 +77,13 @@ def sync(package):
     sleep(3)
     yn = input(f"\n\n{cyan}::{normal} Proceed with installation of {selected_pkg}-{selected_version}? [Y/n] ")
     if yn.lower() == "y":
-        repo = get_repo_url(username=package.split('/', 1)[0], repo_name=package.split('/', 1)[-1])
+        repo = get_repo_url(username=selected_pkg.split('/', 1)[0], repo_name=selected_pkg.split('/', 1)[-1])
         system(f"git clone {repo}.git")
         print(" -> Gathered Repo Files")
         sleep(3)
         rev = input(f"\n{cyan}::{normal} Proceed with Review of PKGBUILD? [Y/n] ")
         if rev.lower() == "y":
-            system(f"cd {package.split('/', 1)[-1]} && cat PKGBUILD")
+            system(f"cd {selected_pkg.split('/', 1)[-1]} && cat PKGBUILD")
             system("cd ..")
             print("\n", end='')
             end()
@@ -139,7 +145,7 @@ try:
         print(f"laddu   {l}-R --remove{r} -- Removes any given packages")
         print(f"laddu   {l}-S --sync{r} -- Sychronizes the laddu database and installs the given package")
         print(f"laddu   {l}-Ss --search{r} -- Searches and gives user with query")
-        print(f"laddu   {l}-Syu -Sua --update{r} -- Updates laddu database to the latest") 
+        print(f"laddu   {l}-Syu -Sua --update{r} -- Updates laddu database to the latest")
 
     if argv[1] == "-Syu" or argv[1] == "--update" or argv[1] == "-Sua":
         if len(argv) < 3:
@@ -161,9 +167,9 @@ try:
 
     if argv[1] == "-S" or argv[1] == "--sync":
         sync(argv[2])
-              
+
     if argv[1] == "-Ss" or argv[1] == "--search":
-        search(argv[3])
+        search(argv[3], aur=True if '--aur' in argv else False, git=True if '--git' in argv else False)
         
     if argv[1] == "-V" or argv[1] == "--version":
         print(VERSION)
