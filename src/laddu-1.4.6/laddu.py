@@ -6,10 +6,10 @@ from time import sleep
 from subprocess import run
 
 # Setup
-i = 0
 VERSION = "laddu v1.4.6"
 VERSION_RAW = "v1.4.6"
 pkg_name_desc = {}
+pkg_name_version = {}
 Depends = ['colorama', 'requests']
 argc = len(argv)
 cyan = colorama.Fore.LIGHTCYAN_EX
@@ -18,7 +18,7 @@ l = "{"
 r = "}"
 
 def search(search_term):
-    if "--aur" in argv[2] or "-Ss" in argv[1]:
+    if "--aur" in argv:
         package = search_term.split('/', 1)[-1]
         url = f"https://aur.archlinux.org/rpc/?v=5&type=search&arg={package}"
         response = requests.get(url)
@@ -29,13 +29,14 @@ def search(search_term):
             if data['resultcount'] == 0:
                 print("No results found.")
             else:
-                for result in data['results']:
-                    pkg_name_desc[result['Name']] = result['Description']
-                    print(f"Package Name: {result['Name']}\nDescription: {result['Description']}\n")
+                for i, result in enumerate(data['results'], start=1):
+                    pkg_name_desc[i] = result['Name']
+                    pkg_name_version[i] = result['Version']
+                    print(f"{i}. Package Name: {result['Name']}\nDescription: {result['Description']}\nVersion: {result['Version']}\n")
         else:
             print(f" -> error: failed to fetch data from AUR. HTTP Status Code: {response.status_code}")
     
-    elif "--git" in argv[2] or "-Ss" in argv[1]:
+    elif "--git" in argv:
         package = search_term.split('/', 1)[-1]
         url = f"https://api.github.com/search/repositories?q={package}"
         response = requests.get(url)
@@ -46,29 +47,30 @@ def search(search_term):
             if 'items' not in data:
                 print("No results found.")
             else:
-                for i, repo in enumerate(data['items']):
-                    print(f"{i + 1}. Repository Name: {repo['name']}\nDescription: {repo['description']}\nURL: {repo['html_url']}\n")
+                for i, repo in enumerate(data['items'], start=1):
+                    pkg_name_desc[i] = repo['name']
+                    pkg_name_version[i] = repo['default_branch']
+                    print(f"{i}. Repository Name: {repo['name']}\nDescription: {repo['description']}\nURL: {repo['html_url']}\nDefault Branch: {repo['default_branch']}\n")
         else:
             print(f" -> error: failed to fetch data from GitHub. HTTP Status Code: {response.status_code}")
     
     else:
         print(" -> error: invalid option. Use --aur or --git.")
 
-
-
-def Sync(package):
+def sync(package):
     search(package)
-    option = input('Enter Package Number (eg. 0,1,2,3,4)\n==> ')
+    option = int(input('Enter Package Number (e.g. 1,2,3,4):\n==> '))
+    selected_pkg = pkg_name_desc[option]
+    selected_version = pkg_name_version[option]
     sleep(3)
     print(f"\n{cyan}::{normal} Resolving Dependencies...")
     sleep(3)
     print(f"{cyan}::{normal} Looking For Conflicting Packages...")
     sleep(3)
-    print(f"\n{cyan}::{normal} Sync Explicit (1): {pkg_name_desc[option]}")
+    print(f"\n{cyan}::{normal} Sync Explicit: {selected_pkg}-{selected_version}")
     sleep(3)
-    yn = input(f"\n\n{cyan}::{normal} Proceed with installation of {package}? [Y/n] ")
+    yn = input(f"\n\n{cyan}::{normal} Proceed with installation of {selected_pkg}-{selected_version}? [Y/n] ")
     if yn.lower() == "y":
-        # system("makepkg -C")
         repo = get_repo_url(username=package.split('/', 1)[0], repo_name=package.split('/', 1)[-1])
         system(f"git clone {repo}.git")
         print(" -> Gathered Repo Files")
@@ -84,18 +86,14 @@ def Sync(package):
     elif yn.lower() == "n":
         print(" -> error installing repo packages")
 
-
 def get_repo_url(username, repo_name):
     if username != '--aur':
-        url = f"https://github.com/{username}/{repo_name}"
-        return url
+        return f"https://github.com/{username}/{repo_name}"
     elif username == '--aur':
-        url = f"https://aur.archlinux.org/{repo_name}"
-        return url
+        return f"https://aur.archlinux.org/{repo_name}"
     else:
         print(" -> Invalid repo url")
         exit(1)
-
 
 def end():
     try:
@@ -120,7 +118,6 @@ def update():
     for dep in Depends:
         req = f'pip install {dep}'
         run(req, shell=True)
-    
 
 try:
     if argv[1] == "--build" or argv[1] == "-B":
@@ -142,14 +139,14 @@ try:
         print(f"laddu   {l}-R --remove{r} -- Removes any given packages")
         print(f"laddu   {l}-S --sync{r} -- Sychronizes the laddu database and installs the given package")
         print(f"laddu   {l}-Ss --search{r} -- Searches and gives user with query")
-        print(f"laddu   {l}-Syu -Sua --update{r} -- Updates laddu database to the latest")
+        print(f"laddu   {l}-Syu -Sua --update{r} -- Updates laddu database to the latest") 
 
     if argv[1] == "-Syu" or argv[1] == "--update" or argv[1] == "-Sua":
         if len(argv) < 3:
             update()
         else:
             update()
-            Sync(argv[2])
+            sync(argv[2])
 
     if argv[1] == "-R" or argv[1] == "--remove":
         print(f"{cyan}::{normal} Resolving Conflicts...")
@@ -163,8 +160,8 @@ try:
             exit(1)
 
     if argv[1] == "-S" or argv[1] == "--sync":
-        Sync(argv[2])
-
+        sync(argv[2])
+              
     if argv[1] == "-Ss" or argv[1] == "--search":
         search(argv[3])
         
