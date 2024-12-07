@@ -6,7 +6,7 @@ from time import sleep
 from subprocess import run
 
 # Setup
-VERSION = "laddu v1.4.6"
+VERSION = f"laddu-{VERSION_RAW}"
 VERSION_RAW = "v1.4.6"
 pkg_name_desc = {}
 pkg_name_version = {}
