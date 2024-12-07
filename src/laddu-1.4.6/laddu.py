@@ -60,10 +60,13 @@ def search(search_term, aur=False, git=False):
 def sync(package):
     if "--aur" in package:
         search(package.split('--aur/')[1], aur=True)
+        source = "aur"
     elif "--git" in package:
         search(package.split('--git/')[1], git=True)
+        source = "git"
     else:
         search(package)
+        source = "unknown"
 
     option = int(input('Enter Package Number (e.g. 1,2,3,4):\n==> '))
     selected_pkg = pkg_name_desc[option]
@@ -77,8 +80,11 @@ def sync(package):
     sleep(3)
     yn = input(f"\n\n{cyan}::{normal} Proceed with installation of {selected_pkg}-{selected_version}? [Y/n] ")
     if yn.lower() == "y":
-        repo = get_repo_url(username=selected_pkg.split('/', 1)[0], repo_name=selected_pkg.split('/', 1)[-1])
-        system(f"git clone {repo}.git")
+        if source == "aur":
+            repo_url = get_repo_url(username="aur", repo_name=selected_pkg)
+        else:
+            repo_url = get_repo_url(username=selected_pkg.split('/', 1)[0], repo_name=selected_pkg.split('/', 1)[-1])
+        system(f"git clone {repo_url}.git")
         print(" -> Gathered Repo Files")
         sleep(3)
         rev = input(f"\n{cyan}::{normal} Proceed with Review of PKGBUILD? [Y/n] ")
@@ -93,13 +99,10 @@ def sync(package):
         print(" -> error installing repo packages")
 
 def get_repo_url(username, repo_name):
-    if username != '--aur':
-        return f"https://github.com/{username}/{repo_name}"
-    elif username == '--aur':
+    if username == "aur":
         return f"https://aur.archlinux.org/{repo_name}"
     else:
-        print(" -> Invalid repo url")
-        exit(1)
+        return f"https://github.com/{username}/{repo_name}"
 
 def end():
     try:
