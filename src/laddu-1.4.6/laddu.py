@@ -27,7 +27,7 @@ def search(search_term, aur=False, git=False):
             data = response.json()
             
             if data['resultcount'] == 0:
-                print("No results found.")
+                print(f" -> No AUR packages found for '{search_term}'")
             else:
                 for i, result in enumerate(data['results'], start=1):
                     pkg_name_desc[i] = result['Name']
@@ -45,7 +45,7 @@ def search(search_term, aur=False, git=False):
             data = response.json()
     
             if 'items' not in data:
-                print("No results found.")
+                print(f" -> No Git packages found for '{search_term}'")
             else:
                 for i, repo in enumerate(data['items'], start=1):
                     pkg_name_desc[i] = repo['name']
