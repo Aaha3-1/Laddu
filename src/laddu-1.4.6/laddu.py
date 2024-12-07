@@ -30,7 +30,7 @@ def Search(search_term):
                 print("No results found.")
             else:
                 for result in data['results']:
-                    pkg_name_desc[result[Name]] = result[Description]
+                    pkg_name_desc[result['Name']] = result['Description']
                     print(f"Package Name: {result['Name']}\nDescription: {result['Description']}\n")
         else:
             print(f" -> error: failed to fetch data from AUR. HTTP Status Code: {response.status_code}")
