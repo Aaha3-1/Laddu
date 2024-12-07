@@ -142,7 +142,7 @@ try:
     
     if argv[1] == "-h" or argv[1] == "--help":
         print(f"Usage: laddu <flags> <package>\n")
-        print("note[!]: use --aur/<repo> to install aur package.\n{cyan}::{normal} Note: use <user>/<repo> to install git packages (for search, use --git).\n")
+        print(f"{cyan}::{normal} Note: use --aur/<repo> to install aur package.\n{cyan}::{normal} Note: use <user>/<repo> to install git packages (for search, use --git).\n")
         print(f"laddu   {l}-B --build{r} -- Builds package from hardrive")
         print(f"laddu   {l}-h --help{r} -- Reveals laddu Command interface")
         print(f"laddu   {l}-R --remove{r} -- Removes any given packages")
