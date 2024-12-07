@@ -11,7 +11,6 @@ setup(
     install_requires=[
         'colorama',
         'requests',
-        'argparse'
     ],
     classifiers=[
         'Programming Language :: Python :: 3',
