@@ -6,8 +6,8 @@ from time import sleep
 from subprocess import run
 
 # Setup
-VERSION = f"laddu-{VERSION_RAW}"
 VERSION_RAW = "v1.4.6"
+VERSION = f"laddu-{VERSION_RAW}"
 pkg_name_desc = {}
 pkg_name_version = {}
 Depends = ['colorama', 'requests', '--upgrade pip']
