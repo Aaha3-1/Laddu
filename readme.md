@@ -22,11 +22,15 @@ makepkg -si
   ```
 - To install any `github` PKGBUILD file, use:
   ```
-  laddu -S <user>/<reponame>
+  laddu -S --git/<reponame>
   ```
 - To install from `hardisk`, use:
   ```
   laddu -B <path>
+  ```
+- To install any alpm package (pacman), use:
+  ```
+  laddu -S --alpm/<package>
   ```
 
  > [!WARNING]  
