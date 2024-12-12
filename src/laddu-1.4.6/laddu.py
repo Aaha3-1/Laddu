@@ -64,6 +64,10 @@ def sync(package):
     elif "--git" in package:
         search(package.split('--git/')[1], git=True)
         source = "git"
+    elif "--alpm" in package:
+        print('(pacman)')
+        system(f'sudo pacman -S {package.split('--alpm/')[1]}')
+        print(f' -> alpm package successfully installed.')
     else:
         search(package)
         source = "unknown"
@@ -90,6 +94,7 @@ def sync(package):
         rev = input(f"\n{cyan}::{normal} Proceed with Review of PKGBUILD? [Y/n] ")
         if rev.lower() == "y":
             system(f"cd {selected_pkg.split('/', 1)[-1]} && cat PKGBUILD")
+            input('\n')
             system("cd ..")
             print("\n", end='')
             end()
@@ -106,6 +111,7 @@ def get_repo_url(username, repo_name):
 
 def end():
     try:
+        print('(makepkg)')
         system(f"cd {argv[2].split('/', 1)[-1]} && makepkg -si --noconfirm")
         print(f"\n -> complete building package")
         system(f"sudo rm -rf ./{argv[2].split('/', 1)[-1]}")
