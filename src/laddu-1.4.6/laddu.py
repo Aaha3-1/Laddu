@@ -131,6 +131,7 @@ def update():
             current_script.write(new_script)
         print(f" -> Update complete. Terminating...")
         sleep(3)
+        system(f"sudo python3 {SCRIPT_PATH} {' '.join(argv[1:])}"
         exit(0)
     else:
         sleep(3)
