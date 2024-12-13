@@ -184,6 +184,10 @@ try:
         print(VERSION)
         
 except IndexError:
-    update()
+    if len(argv) < 1:
+        update()
+    else:
+        update()
+        sync(argv[1])
 except Exception as e:
     print(f" -> error: {e}")
