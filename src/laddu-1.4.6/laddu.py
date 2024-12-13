@@ -127,7 +127,7 @@ def update():
     sleep(3)
     print(f"\n{cyan}::{normal} Searching (1): laddu-{VERSION_RAW} For Upgrades...\n\n")
     sleep(3)
-    gitpak = 'sudo pacman -S git'
+    gitpak = 'sudo pacman -S --needed git'
     run(gitpak, shell=True)
     
     for dep in Depends:
