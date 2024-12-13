@@ -129,14 +129,13 @@ def update():
         new_script = response.text
         with open(SCRIPT_PATH, 'w') as current_script:
             current_script.write(new_script)
-        print(f"{cyan}::{normal} Update complete. Restarting the script...")
-        system(f"sudo python3 {SCRIPT_PATH} {' '.join(argv[1:])}")
+        print(f" -> Update complete. Terminating...")
+        sleep(3)
         exit(0)
     else:
-        print(":: No updates found.")
-
-    sleep(3)
-    print(f"core is up to date")
+        sleep(3)
+        print(f"core is up to date")
+        
     sleep(3)
     print(f"extra is up to date")
     sleep(3)
