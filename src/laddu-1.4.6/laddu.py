@@ -8,6 +8,8 @@ from subprocess import run
 # Setup
 VERSION_RAW = "v1.4.6"
 VERSION = f"laddu-{VERSION_RAW}"
+SCRIPT_URL = f"https://raw.githubusercontent.com/Aaha3-1/Laddu/src/laddu-{VERSION_RAW}/laddu.py"
+SCRIPT_PATH = "/usr/share/laddu/laddu.py"
 pkg_name_desc = {}
 pkg_name_version = {}
 Depends = ['colorama', 'requests', '--upgrade pip']
@@ -121,11 +123,24 @@ def end():
 def update():
     print(f"{cyan}::{normal} Synchronizing Package Databases...\n")
     sleep(3)
+    response = requests.get(SCRIPT_URL)
+
+    if response.status_code == 200:    
+        new_script = response.text
+        with open(SCRIPT_PATH, 'w') as current_script:
+            current_script.write(new_script)
+        print(f"{cyan}::{normal} Update complete. Restarting the script...")
+        system(f"sudo python3 {SCRIPT_PATH} {' '.join(argv[1:])}")
+        exit(0)
+    else:
+        print(":: No updates found.")
+
+    sleep(3)
     print(f"core is up to date")
     sleep(3)
     print(f"extra is up to date")
     sleep(3)
-    print(f"\n{cyan}::{normal} Searching (1): laddu-{VERSION_RAW} For Upgrades...\n\n")
+    print(f"{cyan}::{normal} Searching (1): laddu-{VERSION_RAW} For Upgrades...\n")
     sleep(3)
     gitpak = 'sudo pacman -S --needed git'
     run(gitpak, shell=True)
@@ -133,6 +148,7 @@ def update():
     for dep in Depends:
         req = f'pip install {dep}'
         run(req, shell=True)
+
 
 try:
     if argv[1] == "--build" or argv[1] == "-B":
