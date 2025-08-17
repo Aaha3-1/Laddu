@@ -18,14 +18,15 @@ jobs:
         with:
           python-version: '3.10'
 
-      # Remove .SRCINFO before the action runs to avoid permission issues
-      - name: Clean up .SRCINFO
+      # Move or delete .SRCINFO to avoid permission errors
+      - name: Prepare workspace
         run: |
           if [ -f .SRCINFO ]; then
-            rm -f .SRCINFO
+            echo ".SRCINFO exists — moving to backup"
+            mv .SRCINFO .SRCINFO.bak
           fi
 
-      # Run Arch Linux packaging action inside container
+      # Run Arch Linux packaging action
       - name: Run Arch Package Action
         uses: heyhusen/archlinux-package-action@v2.2.1
         with:
