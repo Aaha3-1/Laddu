@@ -18,18 +18,14 @@ jobs:
         with:
           python-version: '3.10'
 
-      # Optional: Make .SRCINFO writable if it exists
-      - name: Make .SRCINFO writable
+      # Remove .SRCINFO before the action runs to avoid permission issues
+      - name: Clean up .SRCINFO
         run: |
           if [ -f .SRCINFO ]; then
-            chmod +w .SRCINFO
+            rm -f .SRCINFO
           fi
 
-      # Optional: Remove .SRCINFO to avoid permission issues
-      - name: Remove existing .SRCINFO
-        run: rm -f .SRCINFO
-
-      # Let the Arch package action handle .SRCINFO generation
+      # Run Arch Linux packaging action inside container
       - name: Run Arch Package Action
         uses: heyhusen/archlinux-package-action@v2.2.1
         with:
