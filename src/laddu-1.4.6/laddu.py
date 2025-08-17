@@ -68,7 +68,7 @@ def sync(package):
         source = "git"
     elif "--alpm" in package:
         print('(pacman)')
-        system(f'sudo pacman -S {package.split('--alpm/')[1]}')
+        system(f"sudo pacman -S {package.split('--alpm/')[1]}")
         print(f' -> alpm package successfully installed.')
     else:
         search(package)
@@ -207,4 +207,5 @@ except IndexError:
         sync(argv[1])
 except Exception as e:
     print(f" -> error: {e}")
+
 
