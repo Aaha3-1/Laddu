@@ -40,6 +40,13 @@ jobs:
         
     - name: Make .SRCINFO writable
       run: chmod +w .SRCINFO
+
+    - name: Move to temp dir
+      run: |
+        mkdir -p /tmp/pkgbuild
+        cp PKGBUILD /tmp/pkgbuild/
+        cd /tmp/pkgbuild
+        makepkg --printsrcinfo > .SRCINFO
       
     - name: Build Package (Test)
       uses: heyhusen/archlinux-package-action@v2.2.1
