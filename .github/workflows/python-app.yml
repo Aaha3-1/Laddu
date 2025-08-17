@@ -33,7 +33,7 @@ jobs:
         pip install colorama
         pip install requests
         pip install argparse
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi # pls work
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
