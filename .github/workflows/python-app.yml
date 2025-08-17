@@ -18,18 +18,18 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Make .SRCINFO writable (if exists)
+      # Optional: Make .SRCINFO writable if it exists
+      - name: Make .SRCINFO writable
         run: |
           if [ -f .SRCINFO ]; then
             chmod +w .SRCINFO
           fi
 
+      # Optional: Remove .SRCINFO to avoid permission issues
       - name: Remove existing .SRCINFO
         run: rm -f .SRCINFO
 
-      - name: Regenerate .SRCINFO
-        run: makepkg --printsrcinfo > .SRCINFO
-
+      # Let the Arch package action handle .SRCINFO generation
       - name: Run Arch Package Action
         uses: heyhusen/archlinux-package-action@v2.2.1
         with:
